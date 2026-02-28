@@ -18,6 +18,7 @@ MODULE_MAP: dict[str, str] = {
     "pos": "pos",
     "inventory": "inventory",
     "vendors": "vendors",
+    "invoices": "invoices",
     "reports": "reports",
 }
 

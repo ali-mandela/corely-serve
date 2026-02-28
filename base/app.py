@@ -27,6 +27,7 @@ from base.inventory import inventory_router
 from base.customers import customers_router
 from base.vendors import vendors_router
 from base.pos import pos_router
+from base.invoices import invoices_router
 
 logger = Logger("request")
 
@@ -157,6 +158,11 @@ def create_app() -> FastAPI:
         pos_router,
         prefix=f"/api/{v}/pos",
         tags=["POS (Point of Sale)"],
+    )
+    app.include_router(
+        invoices_router,
+        prefix=f"/api/{v}/invoices",
+        tags=["Invoicing"],
     )
 
     # ── Health check ─────────────────────────────────────────

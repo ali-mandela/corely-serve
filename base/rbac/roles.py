@@ -19,6 +19,7 @@ ROLES: dict[str, list[str]] = {
         "stores:*",
         "pos:*",
         "inventory:*",
+        "invoices:*",
         "reports:*",
     ],
     "manager": [
@@ -29,6 +30,7 @@ ROLES: dict[str, list[str]] = {
         "stores:read",
         "pos:*",
         "inventory:read",
+        "invoices:read",
         "reports:read",
     ],
     "employee": [
