@@ -1,0 +1,29 @@
+{
+    "success": true,
+    "data": {
+        "name": "ladakh store",
+        "slug": "lhs",
+        "description": "All in one store for hardware",
+        "email": "lha@help.com",
+        "phone": "+9876878787878",
+        "website": "lhs.comming",
+        "plan": "basic",
+        "address": {
+            "street": "Titichumik",
+            "city": "Kargil",
+            "state": "Ladakh",
+            "zip_code": "194105",
+            "country": "India"
+        },
+        "created_by": "68c845e1a8cc5de54672ea77",
+        "site_code": "corely",
+        "created_at": "2025-09-16T22:56:32.095886",
+        "updated_at": "2025-09-16T22:56:32.095890",
+        "_id": "68c99dc8b721a7e4dc0db814",
+        "admin_credentials": {
+            "username": "lhs_admin",
+            "email": "admin@lhs.com",
+            "password": "eD$L>F7ULI;s"
+        }
+    }
+}
