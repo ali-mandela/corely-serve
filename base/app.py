@@ -28,6 +28,8 @@ from base.customers import customers_router
 from base.vendors import vendors_router
 from base.pos import pos_router
 from base.invoices import invoices_router
+from base.audit import audit_router
+from base.profile import profile_router
 
 logger = Logger("request")
 
@@ -163,6 +165,16 @@ def create_app() -> FastAPI:
         invoices_router,
         prefix=f"/api/{v}/invoices",
         tags=["Invoicing"],
+    )
+    app.include_router(
+        audit_router,
+        prefix=f"/api/{v}/audit-logs",
+        tags=["Audit Logs"],
+    )
+    app.include_router(
+        profile_router,
+        prefix=f"/api/{v}/profile",
+        tags=["Profile & Password"],
     )
 
     # ── Health check ─────────────────────────────────────────
