@@ -36,6 +36,7 @@ ROLES: dict[str, list[str]] = {
         "products:read",
         "pos:create",
         "pos:read",
+        "pos:update",
     ],
 }
 
