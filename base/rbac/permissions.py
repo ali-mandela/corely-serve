@@ -13,9 +13,11 @@ MODULE_MAP: dict[str, str] = {
     "users": "users",
     "customers": "customers",
     "products": "products",
+    "items": "products",        # /api/v1/items → products:* permission
     "stores": "stores",
     "pos": "pos",
     "inventory": "inventory",
+    "vendors": "vendors",
     "reports": "reports",
 }
 

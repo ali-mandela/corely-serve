@@ -22,6 +22,10 @@ from base.utils import Logger
 from base.auth import auth_router
 from base.organization import org_router
 from base.users import users_router
+from base.items import items_router
+from base.inventory import inventory_router
+from base.customers import customers_router
+from base.vendors import vendors_router
 
 logger = Logger("request")
 
@@ -127,6 +131,26 @@ def create_app() -> FastAPI:
         users_router,
         prefix=f"/api/{v}/users",
         tags=["Users"],
+    )
+    app.include_router(
+        items_router,
+        prefix=f"/api/{v}/items",
+        tags=["Items / Products"],
+    )
+    app.include_router(
+        inventory_router,
+        prefix=f"/api/{v}/inventory",
+        tags=["Inventory"],
+    )
+    app.include_router(
+        customers_router,
+        prefix=f"/api/{v}/customers",
+        tags=["Customers"],
+    )
+    app.include_router(
+        vendors_router,
+        prefix=f"/api/{v}/vendors",
+        tags=["Vendors / Suppliers"],
     )
 
     # ── Health check ─────────────────────────────────────────

@@ -20,6 +20,7 @@ class UserService:
         self.users = get_tenant_collection(db, org_slug, "users")
 
     async def create_user(self, data: dict, created_by: str | None = None) -> dict:
+        """Create a new user. Hashes password, resolves permissions from role, checks email uniqueness."""
         # Check for duplicate email
         existing = await self.users.find_one({"email": data["email"]})
         if existing:
@@ -50,6 +51,7 @@ class UserService:
         return safe
 
     async def get_user(self, user_id: str) -> dict:
+        """Get a single user by ID (excludes password from response)."""
         if not ObjectId.is_valid(user_id):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -72,6 +74,7 @@ class UserService:
         limit: int = 20,
         offset: int = 0,
     ) -> tuple[list[dict], int]:
+        """List users with optional search by name, email, or username."""
         filters: dict = {"is_deleted": {"$ne": True}}
         if query:
             filters["$or"] = [
@@ -91,6 +94,7 @@ class UserService:
         return users, total
 
     async def update_user(self, user_id: str, update_data: dict) -> dict:
+        """Update user fields. Auto-resolves permissions if role changes."""
         if not ObjectId.is_valid(user_id):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -118,7 +122,7 @@ class UserService:
         return safe
 
     async def delete_user(self, user_id: str) -> dict:
-        """Soft-delete a user."""
+        """Soft-delete a user (sets is_deleted=True, preserves data)."""
         if not ObjectId.is_valid(user_id):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
