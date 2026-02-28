@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 1440  # 24 hours
 
     # ── Platform key (for org setup endpoint) ────────────────────
-    app_key: str = "corely@shm"
+    app_key: str = "corely_application"
 
     # ── CORS ─────────────────────────────────────────────────────
     cors_allowed_origins: list[str] = [

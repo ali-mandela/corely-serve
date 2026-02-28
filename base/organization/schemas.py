@@ -23,8 +23,10 @@ class AddressModel(BaseModel):
 
 class ModuleEnum(str, Enum):
     EMPLOYEE_MANAGEMENT = "employee"
+    INVOICES = "invoices"
     BILLING = "billing"
     ANALYTICS = "analytics"
+    INVENTORY = "inventory"
     NOTIFICATIONS = "notifications"
     REPORTING = "reporting"
     STORES = "stores"

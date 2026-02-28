@@ -14,7 +14,7 @@ def _require_app_admin(request: Request):
     role = request.headers.get("role")
     app_key = request.headers.get("app-key")
 
-    if role != "only_app_admin":
+    if role != "system_admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Insufficient permissions",

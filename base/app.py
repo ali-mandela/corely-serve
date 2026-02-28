@@ -4,18 +4,60 @@ Corely Enterprise System — Main application.
 Assembles all packages: config, middleware, auth, organization, users.
 """
 
+import time
+import traceback
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from base.config import settings, db_manager
 from base.middleware import AuthPermissionMiddleware
+from base.utils import Logger
 
 # ── Route imports ────────────────────────────────────────────────
 from base.auth import auth_router
 from base.organization import org_router
 from base.users import users_router
+
+logger = Logger("request")
+
+
+# ── Request Logging Middleware ───────────────────────────────────
+class RequestLoggingMiddleware(BaseHTTPMiddleware):
+    """Logs every request: method, path, status code, and duration."""
+
+    async def dispatch(self, request: Request, call_next):
+        start = time.time()
+        method = request.method
+        path = request.url.path
+        client = request.client.host if request.client else "unknown"
+
+        logger.info(f"--> {method} {path} (from {client})")
+
+        try:
+            response = await call_next(request)
+        except Exception as exc:
+            duration = round((time.time() - start) * 1000, 2)
+            logger.error(f"<-- {method} {path} | 500 | {duration}ms")
+            logger.error(f"    Exception: {exc}")
+            logger.error(traceback.format_exc())
+            raise
+
+        duration = round((time.time() - start) * 1000, 2)
+        status = response.status_code
+
+        if status >= 500:
+            logger.error(f"<-- {method} {path} | {status} | {duration}ms")
+        elif status >= 400:
+            logger.warning(f"<-- {method} {path} | {status} | {duration}ms")
+        else:
+            logger.info(f"<-- {method} {path} | {status} | {duration}ms")
+
+        return response
 
 
 # ── Lifespan ─────────────────────────────────────────────────────
@@ -34,7 +76,7 @@ def create_app() -> FastAPI:
         description="Multi-tenant RBAC enterprise system",
         docs_url="/api/docs",
         lifespan=lifespan,
-    )
+    ) 
 
     # ── CORS (must be first) ─────────────────────────────────
     app.add_middleware(
@@ -45,8 +87,28 @@ def create_app() -> FastAPI:
         allow_headers=settings.cors_allowed_headers,
     )
 
+    # ── Request logging (runs on every request) ──────────────
+    app.add_middleware(RequestLoggingMiddleware)
+
     # ── Auth + RBAC middleware ───────────────────────────────
     app.add_middleware(AuthPermissionMiddleware)
+
+    # ── Global exception handler ─────────────────────────────
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request: Request, exc: Exception):
+        logger.error(f"Unhandled exception on {request.method} {request.url.path}:")
+        logger.error(traceback.format_exc())
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "error": {
+                    "code": 500,
+                    "message": str(exc) if settings.debug else "Internal server error",
+                },
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            },
+        )
 
     # ── Routes ───────────────────────────────────────────────
     v = settings.api_version  # "v1"
