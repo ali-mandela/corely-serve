@@ -31,6 +31,7 @@ from base.invoices import invoices_router
 from base.audit import audit_router
 from base.profile import profile_router
 from base.reports import reports_router
+from base.stores import stores_router
 
 logger = Logger("request")
 
@@ -181,6 +182,11 @@ def create_app() -> FastAPI:
         reports_router,
         prefix=f"/api/{v}/reports",
         tags=["Reports & Dashboard"],
+    )
+    app.include_router(
+        stores_router,
+        prefix=f"/api/{v}/stores",
+        tags=["Stores / Locations"],
     )
 
     # ── Health check ─────────────────────────────────────────
