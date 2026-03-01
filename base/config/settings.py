@@ -29,6 +29,7 @@ class Settings(BaseSettings):
         "http://localhost:4200",
         "http://localhost:3000",
         "http://127.0.0.1:4200",
+        "https://corely-six.vercel.app",
     ]
     cors_allow_credentials: bool = True
     cors_allowed_methods: list[str] = ["*"]
