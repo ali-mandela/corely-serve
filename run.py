@@ -7,6 +7,7 @@ from app.api.v1.customer_api import customer as customerAPI
 from app.api.v1.store_api import store as storeAPI
 from app.api.v1.product_api import product as productAPI
 from app.api.v1.pos_api import pos as posAPI
+from app.api.v1.system_api import system as systemAPI
 
 """"""
 settings = CorelySettings()
@@ -28,3 +29,6 @@ app.include_router(
     productAPI, prefix=f"/api/{api_version}/product", tags=["Product API's"]
 )
 app.include_router(posAPI, prefix=f"/api/{api_version}/pos", tags=["Pos API's"])
+app.include_router(
+    systemAPI, prefix=f"/api/{api_version}/system", tags=["System API's"]
+)
