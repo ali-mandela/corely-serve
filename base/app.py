@@ -170,7 +170,7 @@ def create_app() -> FastAPI:
     )
     app.include_router(
         audit_router,
-        prefix=f"/api/{v}/audit-logs",
+        prefix=f"/api/{v}/audit",
         tags=["Audit Logs"],
     )
     app.include_router(
